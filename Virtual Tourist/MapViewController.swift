@@ -19,4 +19,12 @@ class MapViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
+    
+    @IBAction func dropPin(_ sender: UILongPressGestureRecognizer) {
+        let location = sender.location(in: self.mapView)
+        let locationCoordinates = self.mapView.convert(location, toCoordinateFrom: self.mapView)
+        
+        print(locationCoordinates.latitude, locationCoordinates.longitude)
+    }
+    
 }
