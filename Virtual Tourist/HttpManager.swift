@@ -45,14 +45,36 @@ class HttpManager {
                 return
             }
             
+            self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: { (data, error) in
+                guard (error == nil) else {
+                    completionHandler(nil, error! as NSError)
+                    return
+                }
+                
+                completionHandler(data,nil)
+            })
+            
+            
+            
             
         })
         
         task.resume()
         
         return task
+    }
+    
+    private func convertDataWithCompletionHandler(_ data: Data, completionHandlerForConvertData: (_ result: AnyObject?, _ error: NSError?) -> Void) {
         
+        var parsedResult: AnyObject! = nil
         
+        do {
+            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
+            completionHandlerForConvertData(parsedResult, nil)
+        } catch {
+            let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
+            completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
+        }
     }
     
     func buildQueryItems(_ lat: Double, _ lon: Double) -> [URLQueryItem] {

@@ -15,6 +15,8 @@ class MapViewController: UIViewController {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     lazy var context: NSManagedObjectContext = self.appDelegate.stack.context
     
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
+    
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,9 +35,27 @@ class MapViewController: UIViewController {
         let location = sender.location(in: self.mapView)
         let locationCoordinates = self.mapView.convert(location, toCoordinateFrom: self.mapView)
         
-        // Added Pin
-        _ = Pin(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude, context: context)
-        mapView.addAnnotation(createAnnotation(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude))
+        showActivityIndicator()
+        
+        _ = HttpManager.shared.taskForGETRequest(locationCoordinates.latitude, locationCoordinates.longitude, completionHandler: { (results, error) in
+            
+            guard (error == nil) else {
+                print(error)
+                return
+            }
+            
+            let pin = Pin(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude, context: self.context)
+            
+            FlickrPhotos.shared.buildAndSave(results!, pin: pin, context: self.context)
+            
+            performUIUpdatesOnMain {
+                self.mapView.addAnnotation(self.createAnnotation(latitude: pin.latitude, longitude: pin.longitude))
+                self.hideActivityIndicator()
+            }
+        })
+        
+        // Added Pi
+//        mapView.addAnnotation(createAnnotation(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude))
         
     }
     
@@ -55,6 +75,10 @@ class MapViewController: UIViewController {
         
         for pin in pins {
             annotations.append(createAnnotation(latitude: pin.latitude, longitude: pin.longitude))
+//            let nss = pin.album?.photos?.allObjects as? [Photo]
+//            for p in nss! {
+//                print(p.title)
+//            }
         }
         
         mapView.removeAnnotations(mapView.annotations)
@@ -67,6 +91,21 @@ class MapViewController: UIViewController {
         annotation.coordinate = centerCoordinate
         
         return annotation
+    }
+    
+    func showActivityIndicator() {
+        self.activityIndicator.center = self.view.center
+        self.activityIndicator.hidesWhenStopped = true
+        self.activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        view.addSubview(self.activityIndicator)
+        
+        self.activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+    }
+    
+    func hideActivityIndicator() {
+        self.activityIndicator.stopAnimating()
+        UIApplication.shared.endIgnoringInteractionEvents()
     }
     
 }
