@@ -32,31 +32,31 @@ class MapViewController: UIViewController {
     }
     
     @IBAction func dropPin(_ sender: UILongPressGestureRecognizer) {
-        let location = sender.location(in: self.mapView)
-        let locationCoordinates = self.mapView.convert(location, toCoordinateFrom: self.mapView)
-        
-        showActivityIndicator()
-        
-        _ = HttpManager.shared.taskForGETRequest(locationCoordinates.latitude, locationCoordinates.longitude, completionHandler: { (results, error) in
+        if sender.state == UIGestureRecognizerState.began {
+            let location = sender.location(in: self.mapView)
+            let locationCoordinates = self.mapView.convert(location, toCoordinateFrom: self.mapView)
             
-            guard (error == nil) else {
-                print(error)
-                return
-            }
+            showActivityIndicator()
             
-            let pin = Pin(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude, context: self.context)
-            
-            FlickrPhotos.shared.buildAndSave(results!, pin: pin, context: self.context)
-            
-            performUIUpdatesOnMain {
-                self.mapView.addAnnotation(self.createAnnotation(latitude: pin.latitude, longitude: pin.longitude))
-                self.hideActivityIndicator()
-            }
-        })
-        
-        // Added Pi
-//        mapView.addAnnotation(createAnnotation(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude))
-        
+            _ = HttpManager.shared.taskForGETRequest(locationCoordinates.latitude, locationCoordinates.longitude, completionHandler: { (results, error) in
+                
+                guard (error == nil) else {
+                    print(error)
+                    return
+                }
+                
+                let pin = Pin(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude, context: self.context)
+                
+                FlickrPhotos.shared.buildAndSave(results!, pin: pin, context: self.context)
+                
+                performUIUpdatesOnMain {
+                    let annotation = self.createAnnotation(latitude: pin.latitude, longitude: pin.longitude) as! MKAnnotation
+                    self.mapView.addAnnotation(annotation)
+                    self.hideActivityIndicator()
+                    self.performSegue(withIdentifier: "AlbumViewSegue", sender: annotation)
+                }
+            })
+        }
     }
     
     func retrievePins() {
@@ -108,9 +108,25 @@ class MapViewController: UIViewController {
         UIApplication.shared.endIgnoringInteractionEvents()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "AlbumViewSegue" {
+            
+            let albumVC = segue.destination as? AlbumViewController
+            
+            if let annotation = sender as? MKAnnotation {
+                albumVC?.annotation = annotation
+            }
+        }
+    }
+    
 }
 
 extension MapViewController: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        performSegue(withIdentifier: "AlbumViewSegue", sender: view.annotation!)
+    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
@@ -119,9 +135,7 @@ extension MapViewController: MKMapViewDelegate {
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = true
             pinView!.pinTintColor = .purple
-            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
             
         } else {
             pinView!.annotation = annotation

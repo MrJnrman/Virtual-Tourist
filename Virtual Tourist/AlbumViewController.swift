@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import MapKit
 
 class AlbumViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var mapView: MKMapView!
     
-    
+    var annotation: MKAnnotation!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,15 +22,15 @@ class AlbumViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        imageView.image = UIImage(named: "picture")
-        
+        setMap()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func setMap() {
+        let span = MKCoordinateSpanMake(0.075, 0.075)
+        let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude), span: span)
+        mapView.setRegion(region, animated: true)
+        mapView.addAnnotation(annotation)
     }
-
 }
 
 extension AlbumViewController: UICollectionViewDelegate {

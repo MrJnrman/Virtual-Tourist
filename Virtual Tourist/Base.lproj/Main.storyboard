@@ -89,14 +89,14 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="8e4-Sg-8v3">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jlO-Yi-Ul7">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="128"/>
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dBC-Uo-aM8">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="128" id="LH0-34-r3V"/>
+                                            <constraint firstAttribute="height" constant="120" id="dGw-ID-P9i"/>
                                         </constraints>
-                                    </imageView>
+                                    </mapView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ZbH-j2-sLo">
-                                        <rect key="frame" x="0.0" y="128" width="375" height="425"/>
+                                        <rect key="frame" x="0.0" y="120" width="375" height="433"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="d7h-ro-dEj">
                                             <size key="itemSize" width="131" height="123"/>
@@ -152,8 +152,11 @@
                                     </view>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="dBC-Uo-aM8" firstAttribute="top" secondItem="8e4-Sg-8v3" secondAttribute="top" id="Ie9-kr-Tdg"/>
                                     <constraint firstItem="8My-vQ-4Xm" firstAttribute="leading" secondItem="8e4-Sg-8v3" secondAttribute="leading" id="jok-Uc-uPH"/>
                                     <constraint firstAttribute="trailing" secondItem="8My-vQ-4Xm" secondAttribute="trailing" id="lbv-Z4-nHH"/>
+                                    <constraint firstAttribute="trailing" secondItem="dBC-Uo-aM8" secondAttribute="trailing" id="pzk-LZ-Ijj"/>
+                                    <constraint firstItem="dBC-Uo-aM8" firstAttribute="leading" secondItem="8e4-Sg-8v3" secondAttribute="leading" id="r6F-qe-j9p"/>
                                     <constraint firstAttribute="bottom" secondItem="8My-vQ-4Xm" secondAttribute="bottom" id="vjc-yJ-XPJ"/>
                                 </constraints>
                             </stackView>
@@ -168,7 +171,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="ZbH-j2-sLo" id="vIq-Rm-792"/>
-                        <outlet property="imageView" destination="jlO-Yi-Ul7" id="fnO-Hg-6i8"/>
+                        <outlet property="mapView" destination="dBC-Uo-aM8" id="fCV-U1-o62"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mic-Al-ciM" userLabel="First Responder" sceneMemberID="firstResponder"/>
