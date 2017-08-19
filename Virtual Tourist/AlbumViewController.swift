@@ -27,8 +27,12 @@ class AlbumViewController: UIViewController {
 
         collectionView.delegate = self
         collectionView.dataSource = self
-        loadPhotos()
         setMap()
+        loadPhotos()
+        guard (photos[0].imageData != nil) else {
+            retrivePhotos()
+            return
+        }
     }
     
     func setMap() {
@@ -52,6 +56,23 @@ class AlbumViewController: UIViewController {
             print("error retrieving photos")
         }
     }
+    
+    func retrivePhotos() {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async { () -> Void in
+            for photo in self.photos {
+                let imageUrl = URL(string: photo.url!)
+                
+                if let imageData = try? Data(contentsOf: imageUrl!) {
+                    photo.imageData = imageData as NSData
+                    
+                }
+            }
+            
+            performUIUpdatesOnMain {
+                self.collectionView.reloadData()
+            }
+        }
+    }
 }
 
 // TODO: load view controller with coredata 
@@ -69,14 +90,10 @@ extension AlbumViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumViewCell", for: indexPath) as! AlbumCollectionViewCell
         let photo = photos[indexPath.row]
         
-        let imageUrl = URL(string: photo.url!)
-        
-        if let imageData = try? Data(contentsOf: imageUrl!) {
-            performUIUpdatesOnMain {
-                cell.imageView.image = UIImage(data: imageData)
-            }
+        if let data = photo.imageData as? Data {
+            cell.imageView.image = UIImage(data: data)
         }
-        
+
 //        print(photo.url!)
 //        cell.url = photo.url!
         return cell

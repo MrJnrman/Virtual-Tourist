@@ -30,6 +30,8 @@ struct FlickrPhotos {
     }
     
     mutating func buildAndSave(_ results: AnyObject, pin: Pin, context: NSManagedObjectContext) {
+        
+        // TODO: randomize images based on page and page count
         guard let photos = results["photos"] as? [String:AnyObject] else {
             return
         }

@@ -21,6 +21,8 @@ class HttpManager {
         components.path = Constants.Flickr.ApiPath
         components.queryItems = buildQueryItems(lat, lon)
         
+        print(components.url!)
+        
         let request = URLRequest(url: components.url!)
         
         let task = session.dataTask(with: request, completionHandler: { (data,response,error) in

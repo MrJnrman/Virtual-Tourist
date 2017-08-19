@@ -53,7 +53,7 @@ class MapViewController: UIViewController {
                     let annotation = self.createAnnotation(latitude: pin.latitude, longitude: pin.longitude, pin: pin) 
                     self.mapView.addAnnotation(annotation)
                     self.hideActivityIndicator()
-                    self.performSegue(withIdentifier: "AlbumViewSegue", sender: annotation)
+//                    self.performSegue(withIdentifier: "AlbumViewSegue", sender: annotation)
                 }
             })
         }
