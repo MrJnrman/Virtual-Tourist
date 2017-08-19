@@ -13,8 +13,12 @@ class AlbumCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    var url: String!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.imageView.image = UIImage(named: "picture")
+        
+        
     }
 }

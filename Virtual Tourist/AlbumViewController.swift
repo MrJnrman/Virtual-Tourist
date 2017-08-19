@@ -8,20 +8,26 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class AlbumViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var mapView: MKMapView!
     
-    var annotation: MKAnnotation!
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    lazy var context: NSManagedObjectContext = self.appDelegate.stack.context
+    
+    var annotation: VirtualTouristPointAnnotation!
+    
+    var photos = [Photo]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         collectionView.delegate = self
         collectionView.dataSource = self
-        
+        loadPhotos()
         setMap()
     }
     
@@ -31,8 +37,24 @@ class AlbumViewController: UIViewController {
         mapView.setRegion(region, animated: true)
         mapView.addAnnotation(annotation)
     }
+    
+    func loadPhotos() {
+        let photoFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        
+        let predicate = NSPredicate(format: "album = %@", argumentArray: [annotation.pin?.album!])
+        photoFetch.predicate = predicate
+        
+        do {
+            photos = try context.fetch(photoFetch) as! [Photo]
+            print(photos)
+            collectionView.reloadData()
+        } catch {
+            print("error retrieving photos")
+        }
+    }
 }
 
+// TODO: load view controller with coredata 
 extension AlbumViewController: UICollectionViewDelegate {
     
     
@@ -40,11 +62,23 @@ extension AlbumViewController: UICollectionViewDelegate {
 
 extension AlbumViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumViewCell", for: indexPath) as! AlbumCollectionViewCell
+        let photo = photos[indexPath.row]
+        
+        let imageUrl = URL(string: photo.url!)
+        
+        if let imageData = try? Data(contentsOf: imageUrl!) {
+            performUIUpdatesOnMain {
+                cell.imageView.image = UIImage(data: imageData)
+            }
+        }
+        
+//        print(photo.url!)
+//        cell.url = photo.url!
         return cell
     }
     

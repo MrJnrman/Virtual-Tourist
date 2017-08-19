@@ -50,7 +50,7 @@ class MapViewController: UIViewController {
                 FlickrPhotos.shared.buildAndSave(results!, pin: pin, context: self.context)
                 
                 performUIUpdatesOnMain {
-                    let annotation = self.createAnnotation(latitude: pin.latitude, longitude: pin.longitude) as! MKAnnotation
+                    let annotation = self.createAnnotation(latitude: pin.latitude, longitude: pin.longitude, pin: pin) 
                     self.mapView.addAnnotation(annotation)
                     self.hideActivityIndicator()
                     self.performSegue(withIdentifier: "AlbumViewSegue", sender: annotation)
@@ -74,7 +74,7 @@ class MapViewController: UIViewController {
         var annotations = [MKPointAnnotation]()
         
         for pin in pins {
-            annotations.append(createAnnotation(latitude: pin.latitude, longitude: pin.longitude))
+            annotations.append(createAnnotation(latitude: pin.latitude, longitude: pin.longitude, pin: pin))
 //            let nss = pin.album?.photos?.allObjects as? [Photo]
 //            for p in nss! {
 //                print(p.title)
@@ -85,10 +85,11 @@ class MapViewController: UIViewController {
         mapView.addAnnotations(annotations)
     }
     
-    func createAnnotation(latitude: Double, longitude: Double) -> MKPointAnnotation {
-        let annotation = MKPointAnnotation()
+    func createAnnotation(latitude: Double, longitude: Double, pin: Pin) -> VirtualTouristPointAnnotation {
+        let annotation = VirtualTouristPointAnnotation()
         let centerCoordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         annotation.coordinate = centerCoordinate
+        annotation.pin = pin
         
         return annotation
     }
@@ -115,7 +116,7 @@ class MapViewController: UIViewController {
             let albumVC = segue.destination as? AlbumViewController
             
             if let annotation = sender as? MKAnnotation {
-                albumVC?.annotation = annotation
+                albumVC?.annotation = annotation as! VirtualTouristPointAnnotation
             }
         }
     }
