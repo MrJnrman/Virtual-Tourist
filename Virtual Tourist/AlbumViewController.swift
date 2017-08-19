@@ -90,7 +90,7 @@ extension AlbumViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumViewCell", for: indexPath) as! AlbumCollectionViewCell
         let photo = photos[indexPath.row]
         
-        if let data = photo.imageData as? Data {
+        if let data = photo.imageData as Data? {
             cell.imageView.image = UIImage(data: data)
         }
 

@@ -41,7 +41,7 @@ class MapViewController: UIViewController {
             _ = HttpManager.shared.taskForGETRequest(locationCoordinates.latitude, locationCoordinates.longitude, completionHandler: { (results, error) in
                 
                 guard (error == nil) else {
-                    print(error)
+                    print(error as Any)
                     return
                 }
                 
@@ -53,7 +53,6 @@ class MapViewController: UIViewController {
                     let annotation = self.createAnnotation(latitude: pin.latitude, longitude: pin.longitude, pin: pin) 
                     self.mapView.addAnnotation(annotation)
                     self.hideActivityIndicator()
-//                    self.performSegue(withIdentifier: "AlbumViewSegue", sender: annotation)
                 }
             })
         }
@@ -126,6 +125,7 @@ class MapViewController: UIViewController {
 extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        mapView.deselectAnnotation(view.annotation!, animated: true)
         performSegue(withIdentifier: "AlbumViewSegue", sender: view.annotation!)
     }
     
