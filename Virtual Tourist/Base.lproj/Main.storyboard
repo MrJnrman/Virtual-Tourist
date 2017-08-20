@@ -54,11 +54,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="lNm-6S-OTa">
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="BN2-gp-90S">
-                            <connections>
-                                <segue destination="Rn3-5y-Ib2" kind="show" id="B2A-fl-b9E"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="BN2-gp-90S"/>
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="pAb-i2-uxE" id="Y1Z-GP-lmm"/>
@@ -179,7 +175,4 @@
             <point key="canvasLocation" x="1645.5999999999999" y="194.75262368815595"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="TMN-Fh-2ip"/>
-    </inferredMetricsTieBreakers>
 </document>

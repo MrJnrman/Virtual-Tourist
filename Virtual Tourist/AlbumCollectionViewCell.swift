@@ -17,8 +17,16 @@ class AlbumCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.imageView.image = UIImage(named: "picture")
+    }
+    
+    func showActivityIndicator() {
+        self.activityIndicator.hidesWhenStopped = true
+        self.activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
         
-        
+        self.activityIndicator.startAnimating()
+    }
+    
+    func hideActivityIndicator() {
+        self.activityIndicator.stopAnimating()
     }
 }

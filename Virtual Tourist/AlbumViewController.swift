@@ -70,7 +70,10 @@ class AlbumViewController: UIViewController {
                     self.photos[index].imageData = imageData as NSData
                     
                     performUIUpdatesOnMain {
-                        self.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
+                        let indexPath = IndexPath(row: index, section: 0)
+                        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumViewCell", for: indexPath) as! AlbumCollectionViewCell
+                        self.collectionView.reloadItems(at: [indexPath])
+                        cell.hideActivityIndicator()
 //                        self.collectionView.reloadData()
                     }
                 }
@@ -93,9 +96,10 @@ extension AlbumViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumViewCell", for: indexPath) as! AlbumCollectionViewCell
         let photo = photos[indexPath.row]
-        
+        cell.showActivityIndicator()
         if let data = photo.imageData as Data? {
             cell.imageView.image = UIImage(data: data)
+            cell.hideActivityIndicator()
         }
 
 //        print(photo.url!)
