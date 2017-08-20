@@ -50,9 +50,15 @@ struct FlickrPhotos {
     
     
     func extractAndSave(_ photos: [[String:AnyObject]], limit: Int, pin: Pin, context: NSManagedObjectContext) {
+        var albumName = "Album"
+        
+        if pin.album != nil {
+            albumName = (pin.album?.name)!
+            context.delete(pin.album!)
+        }
         
         // create album and link it to a pin
-        let album = Album(name: "Album", context: context)
+        let album = Album(name: albumName, context: context)
         album.pin = pin
         
         for index in 0..<limit {

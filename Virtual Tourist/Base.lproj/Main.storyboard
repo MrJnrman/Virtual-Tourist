@@ -137,6 +137,9 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NCY-vW-2zf">
                                                 <rect key="frame" x="135.5" y="10" width="104" height="30"/>
                                                 <state key="normal" title="New Collection"/>
+                                                <connections>
+                                                    <action selector="newCollectionPressed:" destination="Rn3-5y-Ib2" eventType="touchUpInside" id="40G-I8-OIk"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.91216944423708568" green="0.9212008248730964" blue="0.9212008248730964" alpha="0.88624036815068485" colorSpace="custom" customColorSpace="sRGB"/>

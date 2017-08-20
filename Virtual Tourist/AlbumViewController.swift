@@ -19,8 +19,11 @@ class AlbumViewController: UIViewController {
     lazy var context: NSManagedObjectContext = self.appDelegate.stack.context
     
     var annotation: VirtualTouristPointAnnotation!
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     
     var photos = [Photo]()
+    
+    var photoCountBeforeReload = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,13 +32,6 @@ class AlbumViewController: UIViewController {
         collectionView.dataSource = self
         setMap()
         loadPhotos()
-        
-        if photos.count > 0 {
-            guard (photos[0].imageData != nil) else {
-                retrivePhotos()
-                return
-            }
-        }
     }
     
     func setMap() {
@@ -53,8 +49,13 @@ class AlbumViewController: UIViewController {
         
         do {
             photos = try context.fetch(photoFetch) as! [Photo]
-            print(photos)
             collectionView.reloadData()
+            if photos.count > 0 {
+                guard (photos[0].imageData != nil) else {
+                    retrivePhotos()
+                    return
+                }
+            }
         } catch {
             print("error retrieving photos")
         }
@@ -74,15 +75,51 @@ class AlbumViewController: UIViewController {
                         let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumViewCell", for: indexPath) as! AlbumCollectionViewCell
                         self.collectionView.reloadItems(at: [indexPath])
                         cell.hideActivityIndicator()
-//                        self.collectionView.reloadData()
                     }
                 }
             }
         }
     }
+    
+    func showActivityIndicator() {
+        self.activityIndicator.center = self.view.center
+        self.activityIndicator.hidesWhenStopped = true
+        self.activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        view.addSubview(self.activityIndicator)
+        
+        self.activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+    }
+    
+    func hideActivityIndicator() {
+        self.activityIndicator.stopAnimating()
+        UIApplication.shared.endIgnoringInteractionEvents()
+    }
+    
+    @IBAction func newCollectionPressed(_ sender: Any) {
+        _ = HttpManager.shared.taskForGETRequest((annotation.pin?.latitude)!, (annotation.pin?.longitude)!, completionHandler: { (results, error) in
+            
+            guard (error == nil) else {
+                print(error as Any)
+                return
+            }
+            
+            //TODO: Empty photos array before data is pulled
+            //TODO: possibly create a function which starts changes each cell item to a placeholder and clal before loadphotos
+            performUIUpdatesOnMain {
+                self.photoCountBeforeReload = self.photos.count
+                self.photos = [Photo]()
+                self.collectionView.reloadData()
+            }
+            
+            FlickrPhotos.shared.parse(results!, pin: self.annotation.pin!, context: self.context)
+            self.loadPhotos()
+        })
+    }
+    
 }
 
-// TODO: load view controller with coredata 
+// TODO: load view controller with coredata
 extension AlbumViewController: UICollectionViewDelegate {
     
     
@@ -90,20 +127,31 @@ extension AlbumViewController: UICollectionViewDelegate {
 
 extension AlbumViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        if photos.count < 1 {
+            return photoCountBeforeReload
+        }
+        
         return photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumViewCell", for: indexPath) as! AlbumCollectionViewCell
-        let photo = photos[indexPath.row]
+        
         cell.showActivityIndicator()
-        if let data = photo.imageData as Data? {
-            cell.imageView.image = UIImage(data: data)
+        
+        if photos.count > 0 {
+            let photo = photos[indexPath.row]
+            
+            if let data = photo.imageData as Data? {
+                cell.imageView.image = UIImage(data: data)
+                cell.hideActivityIndicator()
+            }
+        } else {
+            cell.imageView.image = nil
             cell.hideActivityIndicator()
         }
-
-//        print(photo.url!)
-//        cell.url = photo.url!
+        
         return cell
     }
     
