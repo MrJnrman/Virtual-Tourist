@@ -29,9 +29,12 @@ class AlbumViewController: UIViewController {
         collectionView.dataSource = self
         setMap()
         loadPhotos()
-        guard (photos[0].imageData != nil) else {
-            retrivePhotos()
-            return
+        
+        if photos.count > 0 {
+            guard (photos[0].imageData != nil) else {
+                retrivePhotos()
+                return
+            }
         }
     }
     
@@ -57,19 +60,20 @@ class AlbumViewController: UIViewController {
         }
     }
     
+    // retrive images in the background and update each cell as they become available
     func retrivePhotos() {
         DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async { () -> Void in
-            for photo in self.photos {
-                let imageUrl = URL(string: photo.url!)
+            for index in 0..<self.photos.count {
+                let imageUrl = URL(string: self.photos[index].url!)
                 
                 if let imageData = try? Data(contentsOf: imageUrl!) {
-                    photo.imageData = imageData as NSData
+                    self.photos[index].imageData = imageData as NSData
                     
+                    performUIUpdatesOnMain {
+                        self.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
+//                        self.collectionView.reloadData()
+                    }
                 }
-            }
-            
-            performUIUpdatesOnMain {
-                self.collectionView.reloadData()
             }
         }
     }

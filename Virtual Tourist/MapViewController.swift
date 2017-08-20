@@ -47,7 +47,7 @@ class MapViewController: UIViewController {
                 
                 let pin = Pin(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude, context: self.context)
                 
-                FlickrPhotos.shared.buildAndSave(results!, pin: pin, context: self.context)
+                FlickrPhotos.shared.parse(results!, pin: pin, context: self.context)
                 
                 performUIUpdatesOnMain {
                     let annotation = self.createAnnotation(latitude: pin.latitude, longitude: pin.longitude, pin: pin) 

@@ -29,7 +29,7 @@ struct FlickrPhotos {
         self.url = url
     }
     
-    mutating func buildAndSave(_ results: AnyObject, pin: Pin, context: NSManagedObjectContext) {
+    mutating func parse(_ results: AnyObject, pin: Pin, context: NSManagedObjectContext) {
         
         // TODO: randomize images based on page and page count
         guard let photos = results["photos"] as? [String:AnyObject] else {
@@ -40,24 +40,34 @@ struct FlickrPhotos {
             return
         }
         
+        if photo.count > 20 {
+            extractAndSave(photo, limit: 19, pin: pin, context: context)
+        } else {
+            extractAndSave(photo, limit: photo.count, pin: pin, context: context)
+        }
+        
+    }
+    
+    
+    func extractAndSave(_ photos: [[String:AnyObject]], limit: Int, pin: Pin, context: NSManagedObjectContext) {
+        
         // create album and link it to a pin
         let album = Album(name: "Album", context: context)
         album.pin = pin
         
-        for pic in photo {
-            
-            guard let title = pic["title"] as? String else {
+        for index in 0..<limit {
+            guard let title = photos[index]["title"] as? String else {
                 continue
             }
+            print("Title: \(title)")
             
-            guard let url = pic["url_m"] as? String else {
+            guard let url = photos[index]["url_m"] as? String else {
                 continue
             }
-            
+
             // create photo and link it to a album
             let photo = Photo(title: title, url: url, context: context)
             photo.album = album
         }
-        
     }
 }
