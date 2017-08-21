@@ -36,16 +36,31 @@ struct FlickrPhotos {
             return
         }
         
-        guard let photo = photos["photo"] as? [[String:AnyObject]] else {
+        guard let photoArray = photos["photo"] as? [[String:AnyObject]] else {
             return
         }
         
-        if photo.count > 20 {
-            extractAndSave(photo, limit: 19, pin: pin, context: context)
+        if photoArray.count > 20 {
+            let randomizedPhotos = getRandomPhotos(photos: photoArray, limit: 19)
+            extractAndSave(randomizedPhotos, limit: 19, pin: pin, context: context)
         } else {
-            extractAndSave(photo, limit: photo.count, pin: pin, context: context)
+            extractAndSave(photoArray, limit: photoArray.count, pin: pin, context: context)
         }
         
+    }
+    
+    func getRandomPhotos(photos: [[String:AnyObject]], limit: Int) -> [[String:AnyObject]] {
+        var randomPhotos = [[String:AnyObject]]()
+        var photoSet = photos
+        
+        for _ in 0..<limit {
+            let randomNumber = Int(arc4random_uniform(UInt32(photoSet.count)))
+            randomPhotos.append(photoSet[randomNumber])
+            
+            photoSet.remove(at: randomNumber)
+        }
+        
+        return randomPhotos
     }
     
     
