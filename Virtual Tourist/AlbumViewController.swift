@@ -14,8 +14,6 @@ class AlbumViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var newCollection: UIButton!
-    @IBOutlet weak var removeItems: UIButton!
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     lazy var context: NSManagedObjectContext = self.appDelegate.stack.context
@@ -119,30 +117,15 @@ class AlbumViewController: UIViewController {
             self.loadPhotos()
         })
     }
-    
-    @IBAction func removeItemsPressed(_ sender: Any) {
-    }
-    
-    
 }
 
 // TODO: load view controller with coredata
-extension AlbumViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        if collectionView.indexPathsForSelectedItems!.count == 1 {
-            toggleButtons(false)
-        }
-        return true
-    }
-    
+extension AlbumViewController: UICollectionViewDelegate {    
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        toggleButtons(true)
+        context.delete(photos[indexPath.row])
+        photos.remove(at: indexPath.row)
+        collectionView.deleteItems(at: [indexPath])
         return true
-    }
-    
-    func toggleButtons(_ hidden: Bool) {
-        newCollection.isHidden = hidden
-        removeItems.isHidden = !hidden
     }
 }
 
