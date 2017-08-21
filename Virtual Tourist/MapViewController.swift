@@ -20,6 +20,8 @@ class MapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var deleteLabel: UILabel!
     
+    var isDeleting = false
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -124,8 +126,10 @@ class MapViewController: UIViewController {
     @IBAction func editButtonPressed(_ sender: Any) {
         if deleteLabel.isHidden {
             deleteLabel.isHidden = false
+            isDeleting = true
         } else {
             deleteLabel.isHidden = true
+            isDeleting = false
         }
     }
     
@@ -136,7 +140,14 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         mapView.deselectAnnotation(view.annotation!, animated: true)
-        performSegue(withIdentifier: "AlbumViewSegue", sender: view.annotation!)
+        if isDeleting {
+            let vtAnnotation = view.annotation as! VirtualTouristPointAnnotation
+            context.delete(vtAnnotation.pin!)
+            mapView.removeAnnotation(view.annotation!)
+        } else {
+            performSegue(withIdentifier: "AlbumViewSegue", sender: view.annotation!)
+        }
+        
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
