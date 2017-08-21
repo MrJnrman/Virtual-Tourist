@@ -44,19 +44,37 @@
                                     <outletCollection property="gestureRecognizers" destination="gKz-rl-D9A" appends="YES" id="yxj-Gk-8bO"/>
                                 </connections>
                             </mapView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap To Delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ffy-ZB-DM9">
+                                <rect key="frame" x="0.0" y="602" width="375" height="65"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="LGi-Cu-JmX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="pAb-i2-uxE" secondAttribute="trailing" id="58V-Rd-ZzX"/>
                             <constraint firstItem="pAb-i2-uxE" firstAttribute="leading" secondItem="1bZ-c6-i2O" secondAttribute="leading" id="9Jr-kg-5S9"/>
+                            <constraint firstItem="Ffy-ZB-DM9" firstAttribute="bottom" secondItem="MGp-B3-eMP" secondAttribute="top" id="COR-Ph-rE5"/>
+                            <constraint firstItem="Ffy-ZB-DM9" firstAttribute="leading" secondItem="pAb-i2-uxE" secondAttribute="leading" id="VlK-b4-KSf"/>
                             <constraint firstItem="pAb-i2-uxE" firstAttribute="top" secondItem="DFg-lJ-KBo" secondAttribute="bottom" id="Y4s-uj-XOY"/>
+                            <constraint firstItem="Ffy-ZB-DM9" firstAttribute="trailing" secondItem="pAb-i2-uxE" secondAttribute="trailing" id="kfH-3a-rFP"/>
                             <constraint firstItem="MGp-B3-eMP" firstAttribute="top" secondItem="pAb-i2-uxE" secondAttribute="bottom" id="nPG-bK-Qf1"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="lNm-6S-OTa">
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="BN2-gp-90S"/>
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="BN2-gp-90S">
+                            <connections>
+                                <action selector="editButtonPressed:" destination="yu7-3e-Z6K" id="Ldd-lB-7gB"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="deleteLabel" destination="Ffy-ZB-DM9" id="zu1-rS-WDm"/>
                         <outlet property="mapView" destination="pAb-i2-uxE" id="Y1Z-GP-lmm"/>
                         <segue destination="Rn3-5y-Ib2" kind="show" identifier="AlbumViewSegue" id="TMN-Fh-2ip"/>
                     </connections>

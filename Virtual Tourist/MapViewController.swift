@@ -18,6 +18,7 @@ class MapViewController: UIViewController {
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var deleteLabel: UILabel!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -119,6 +120,15 @@ class MapViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func editButtonPressed(_ sender: Any) {
+        if deleteLabel.isHidden {
+            deleteLabel.isHidden = false
+        } else {
+            deleteLabel.isHidden = true
+        }
+    }
+    
     
 }
 
