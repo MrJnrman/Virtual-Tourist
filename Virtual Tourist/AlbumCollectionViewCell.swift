@@ -29,4 +29,11 @@ class AlbumCollectionViewCell: UICollectionViewCell {
     func hideActivityIndicator() {
         self.activityIndicator.stopAnimating()
     }
+    
+    override var isSelected: Bool {
+        didSet {
+            self.layer.borderWidth = 3.0
+            self.layer.borderColor = isSelected ? UIColor.blue.cgColor : UIColor.clear.cgColor
+        }
+    }
 }

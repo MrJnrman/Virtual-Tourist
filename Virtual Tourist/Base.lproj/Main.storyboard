@@ -159,12 +159,21 @@
                                                     <action selector="newCollectionPressed:" destination="Rn3-5y-Ib2" eventType="touchUpInside" id="40G-I8-OIk"/>
                                                 </connections>
                                             </button>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xlv-Eg-4Gs">
+                                                <rect key="frame" x="106.5" y="10" width="161" height="30"/>
+                                                <state key="normal" title="Remove Selected Items"/>
+                                                <connections>
+                                                    <action selector="removeItemsPressed:" destination="Rn3-5y-Ib2" eventType="touchUpInside" id="wIv-bZ-gKv"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.91216944423708568" green="0.9212008248730964" blue="0.9212008248730964" alpha="0.88624036815068485" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="5m3-v6-Kj2"/>
+                                            <constraint firstItem="Xlv-Eg-4Gs" firstAttribute="centerX" secondItem="8My-vQ-4Xm" secondAttribute="centerX" id="AFq-EN-2bg"/>
                                             <constraint firstItem="NCY-vW-2zf" firstAttribute="centerY" secondItem="8My-vQ-4Xm" secondAttribute="centerY" id="AdC-Qt-1xZ"/>
                                             <constraint firstItem="NCY-vW-2zf" firstAttribute="centerX" secondItem="8My-vQ-4Xm" secondAttribute="centerX" id="Fav-m9-3b1"/>
+                                            <constraint firstItem="Xlv-Eg-4Gs" firstAttribute="centerY" secondItem="8My-vQ-4Xm" secondAttribute="centerY" id="rO3-pd-MF0"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -189,6 +198,8 @@
                     <connections>
                         <outlet property="collectionView" destination="ZbH-j2-sLo" id="vIq-Rm-792"/>
                         <outlet property="mapView" destination="dBC-Uo-aM8" id="fCV-U1-o62"/>
+                        <outlet property="newCollection" destination="NCY-vW-2zf" id="Dm2-yE-TiJ"/>
+                        <outlet property="removeItems" destination="Xlv-Eg-4Gs" id="5dG-H1-SKW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mic-Al-ciM" userLabel="First Responder" sceneMemberID="firstResponder"/>
