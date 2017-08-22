@@ -80,7 +80,6 @@ struct FlickrPhotos {
             guard let title = photos[index]["title"] as? String else {
                 continue
             }
-            print("Title: \(title)")
             
             guard let url = photos[index]["url_m"] as? String else {
                 continue
@@ -90,5 +89,12 @@ struct FlickrPhotos {
             let photo = Photo(title: title, url: url, context: context)
             photo.album = album
         }
+        
+        do {
+            try context.save()
+        } catch {
+            print("error while trying to save")
+        }
+        
     }
 }

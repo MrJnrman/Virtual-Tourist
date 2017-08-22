@@ -44,7 +44,8 @@ class MapViewController: UIViewController {
             _ = HttpManager.shared.taskForGETRequest(locationCoordinates.latitude, locationCoordinates.longitude, completionHandler: { (results, error) in
                 
                 guard (error == nil) else {
-                    print(error as Any)
+                    self.showAlertView(title: "An Error Occured!", message: "Unable to retrive photo data", buttonText: "Dismiss")
+                    self.hideActivityIndicator()
                     return
                 }
                 

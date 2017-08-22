@@ -101,7 +101,8 @@ class AlbumViewController: UIViewController {
         _ = HttpManager.shared.taskForGETRequest((annotation.pin?.latitude)!, (annotation.pin?.longitude)!, completionHandler: { (results, error) in
             
             guard (error == nil) else {
-                print(error as Any)
+                self.showAlertView(title: "An Error Occured!", message: "Unable to retrive photo data", buttonText: "Dismiss")
+                self.hideActivityIndicator()
                 return
             }
             
@@ -124,6 +125,14 @@ extension AlbumViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         context.delete(photos[indexPath.row])
         photos.remove(at: indexPath.row)
+        
+        
+        do {
+            try context.save()
+        } catch {
+            print("error while trying to save")
+        }
+        
         collectionView.deleteItems(at: [indexPath])
         return true
     }
